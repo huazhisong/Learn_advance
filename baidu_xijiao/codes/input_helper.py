@@ -53,7 +53,6 @@ def get_files(file, trainable=True):
 
     return image_list, label_list
 
-get_files(file)
 # %%
 
 def get_batch(image, label, image_W, image_H, batch_size, capacity):
