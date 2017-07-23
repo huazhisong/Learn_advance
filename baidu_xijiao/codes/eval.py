@@ -44,7 +44,7 @@ def evaluate_image():
         # Build the summary operation based on the TF collection of Summaries.
         summary_op = tf.summary.merge_all()
       
-        summary_writer = tf.summary.FileWriter('./log/eval', g)
+        summary_writer = tf.summary.FileWriter('./logs/eval', g)
         # you need to change the directories to yours.
         logs_train_dir = './logs/train/' 
                        
@@ -86,4 +86,8 @@ def evaluate_image():
                 coord.request_stop()    
             coord.join(threads)
 
+#%%
+if __name__ == '__main__':
+    evaluate_image()
+    
 #%%

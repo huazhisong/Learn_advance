@@ -132,4 +132,7 @@ def test_image():
 #        csv.writer(f).writerows(predictions_human_readable)       
 
 #%%
-test_image()
+if __name__ == '__main__':
+    test_image()
+
+#%%
