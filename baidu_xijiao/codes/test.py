@@ -16,51 +16,55 @@ Created on Thu Jul 20 19:42:36 2017
 # when training, comment the following codes.
 import tensorflow as tf
 import numpy as np
-import os
 import csv
+import os
 
 import alexnet
-
+import input_helper
 #%%
 
-BATCH_SIZE = 16
+BATCH_SIZE = 1
 N_CLASSES = 100
-MAX_STEP = 100
+MAX_STEP = 10593
 IMG_W = 224  # resize the image, if the input image is too large, training will be very slow.
 IMG_H = 224
 CAPACITY = 200
 
+# %%
 def get_files():
     '''
-    Args:
-        file_dir: file directory
     Returns:
-        list of images and labels
+        list of images and image_ids
     '''
 
     image_dir = os.path.abspath('../../../data/badu_xijiao/test/image/')
     image_files= os.listdir(image_dir)
+    image_ids = [file.split('.jpg')[0] for file in image_files]
     image_list = [os.path.join(image_dir, image) for image in image_files]
-    return image_list
+    return image_list, image_ids
+# %%
 
-def get_batch(image, image_W, image_H, batch_size, capacity):
+def get_batch(image, image_id, image_W, image_H, batch_size, capacity):
     '''
     Args:
         image: list type
+        image_id: list type
         image_W: image width
         image_H: image height
         batch_size: batch size
         capacity: the maximum elements in queue
     Returns:
         image_batch: 4D tensor [batch_size, width, height, 3], dtype=tf.float32
-        label_batch: 1D tensor [batch_size], dtype=tf.int32
+        image_id_batch: 1D tensor [batch_size], dtype=tf.int32
     '''
 
     image = tf.cast(image, tf.string)
+    image_id = tf.cast(image_id, tf.string)
 
     # make an input queue
-    input_queue = tf.train.slice_input_producer([image])
+    input_queue = tf.train.slice_input_producer([image, image_id])
 
+    image_id = input_queue[1]
     image_contents = tf.read_file(input_queue[0])
     image = tf.image.decode_jpeg(image_contents, channels=3)
 
@@ -73,21 +77,31 @@ def get_batch(image, image_W, image_H, batch_size, capacity):
     # if you want to test the generated batches of images, you might want to comment the following line.
     image = tf.image.per_image_standardization(image)
 
-    image_batch = tf.train.batch([image],
-                                 batch_size=batch_size,
-                                 num_threads=64,
-                                 capacity=capacity)
+    image_batch, image_id_batch = tf.train.batch([image, image_id],
+                                              batch_size=batch_size,
+                                              num_threads=64,
+                                              capacity=capacity)
+
+    # you can also use shuffle_batch
+    #    image_batch, image_id_batch = tf.train.shuffle_batch([image,image_id],
+    #                                                      batch_size=BATCH_SIZE,
+    #                                                      num_threads=64,
+    #                                                      capacity=CAPACITY,
+    #                                                      min_after_dequeue=CAPACITY-1)
+
+    image_id_batch = tf.reshape(image_id_batch, [batch_size])
     image_batch = tf.cast(image_batch, tf.float32)
 
-    return image_batch
+    return image_batch, image_id_batch
+# %%
 
 def test_image():
     '''Test images against the saved models and parameters
     '''
 
-    train = get_files()    
+    train, image_ids = get_files()    
     with tf.Graph().as_default():
-        train_batch, train_label_batch = get_batch(train, IMG_W, IMG_H, BATCH_SIZE, CAPACITY)  
+        train_batch, imageid_batch = get_batch(train, image_ids, IMG_W, IMG_H, BATCH_SIZE, CAPACITY)  
         logit, _ = alexnet.alexnet_v2(train_batch, N_CLASSES)
         
         prediction = tf.argmax(logit, 1)
@@ -116,8 +130,7 @@ def test_image():
                     if coord.should_stop():
                         break
                     batch_predictions  = sess.run([prediction])
-                    all_predictions = np.concatenate([all_predictions, batch_predictions])
-                    print(all_predictions.shape)
+                    all_predictions = np.concatenate([all_predictions, batch_predictions[0]])
 
             except tf.errors.OutOfRangeError:
                 print('Done training -- epoch limit reached')
@@ -125,12 +138,12 @@ def test_image():
                 coord.request_stop()    
             coord.join(threads)
             
-#    predictions_human_readable = np.column_stack((np.array(train), all_predictions))
-#    out_path = os.path.join(".", "prediction.csv")
-#    print("Saving evaluation to {0}".format(out_path))
-#    with open(out_path, 'w') as f:
-#        csv.writer(f).writerows(predictions_human_readable)       
-
+    predictions_human_readable = np.column_stack((all_predictions, np.array(image_ids)))
+    out_path = os.path.join(".", "prediction.csv")
+    print("Saving evaluation to {0}".format(out_path))
+    with open(out_path, 'w') as f:
+	    for line in predictions_human_readable:
+		    f.write(str(int(line[0]))+'\t'+str(line[1])+'\n')
 #%%
 if __name__ == '__main__':
     test_image()
