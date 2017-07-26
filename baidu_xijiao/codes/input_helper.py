@@ -34,7 +34,7 @@ def get_real_label(data, file = 'train_data.txt', trainable=True):
                 label_list.append(label)
     label_dict = np.array(list(set(label_list)), dtype=np.int32)
     label_dict.sort()
-    return np.array([label_dict[index] for index in data])
+    return np.array([label_dict[int(index)] for index in data])
 # loading image paths and labels
 def get_files(file = 'train_data.txt', trainable=True):
     '''
