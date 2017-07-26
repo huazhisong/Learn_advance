@@ -18,14 +18,17 @@ import tensorflow as tf
 import numpy as np
 import csv
 import os
+# import pdb
 
 import alexnet
 import input_helper
+
 #%%
 
 BATCH_SIZE = 1
 N_CLASSES = 100
 MAX_STEP = 10593
+# MAX_STEP = 10
 IMG_W = 224  # resize the image, if the input image is too large, training will be very slow.
 IMG_H = 224
 CAPACITY = 200
@@ -130,6 +133,7 @@ def test_image():
                     if coord.should_stop():
                         break
                     batch_predictions  = sess.run([prediction])
+                    print(batch_predictions)
                     all_predictions = np.concatenate([all_predictions, batch_predictions[0]])
 
             except tf.errors.OutOfRangeError:
@@ -137,13 +141,15 @@ def test_image():
             finally:
                 coord.request_stop()    
             coord.join(threads)
-            
+    # pdb.set_trace()
+    all_predictions.astype(np.int64)
+    all_predictions = input_helper.get_real_label(all_predictions)
     predictions_human_readable = np.column_stack((all_predictions, np.array(image_ids)))
     out_path = os.path.join(".", "prediction.csv")
     print("Saving evaluation to {0}".format(out_path))
     with open(out_path, 'w') as f:
 	    for line in predictions_human_readable:
-		    f.write(str(int(line[0]))+'\t'+str(line[1])+'\n')
+		    f.write(str(line[0])+'\t'+str(line[1])+'\n')
 #%%
 if __name__ == '__main__':
     test_image()

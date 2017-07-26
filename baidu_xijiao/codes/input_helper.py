@@ -7,8 +7,36 @@ import os
 
 # %%
 file = 'train_data.txt'
+# change data to real predictions
+def get_real_label(data, file = 'train_data.txt', trainable=True):
+    '''
+    Args:
+        data: predi
+    Returns:
+        list of images and labels
+    '''
+    image_list = []
+    label_list = []
+    current_dir = os.path.abspath('../../../data/badu_xijiao/train/')
+    with open(file, 'r') as file:
+        lines = file.readlines()
+        for line in lines:
+            infos = line.split(' ')
+            if trainable:
+                image_path = os.path.abspath(
+                        os.path.join(current_dir,'train', infos[0] + '.jpg'))
+            else:
+                image_path = os.path.abspath(
+                        os.path.join(current_dir,'test1', infos[0] + '.jpg'))
+            label = infos[1]
+            if tf.gfile.Exists(image_path):
+                image_list.append(image_path)
+                label_list.append(label)
+    label_dict = np.array(list(set(label_list)), dtype=np.int32)
+    label_dict.sort()
+    return np.array([label_dict[index] for index in data])
 # loading image paths and labels
-def get_files(file, trainable=True):
+def get_files(file = 'train_data.txt', trainable=True):
     '''
     Args:
         file_dir: file directory
