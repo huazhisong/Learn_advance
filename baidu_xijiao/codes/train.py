@@ -15,8 +15,8 @@ import alexnet
 #%%
 
 N_CLASSES = 100
-IMG_W = 224  # resize the image, if the input image is too large, training will be very slow.
-IMG_H = 224
+IMG_W = 299  # resize the image, if the input image is too large, training will be very slow.
+IMG_H = 299
 BATCH_SIZE = 16
 CAPACITY = 200
 MAX_STEP = 10000 # with current parameters, it is suggested to use MAX_STEP>10k

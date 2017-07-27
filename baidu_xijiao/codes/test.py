@@ -29,8 +29,8 @@ BATCH_SIZE = 1
 N_CLASSES = 100
 MAX_STEP = 10593
 # MAX_STEP = 10
-IMG_W = 224  # resize the image, if the input image is too large, training will be very slow.
-IMG_H = 224
+IMG_W = 299  # resize the image, if the input image is too large, training will be very slow.
+IMG_H = 299
 CAPACITY = 200
 
 # %%
