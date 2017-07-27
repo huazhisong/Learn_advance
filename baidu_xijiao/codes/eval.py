@@ -31,12 +31,12 @@ def evaluate_image():
     file = 'validation_data.txt'
     train, train_label = input_helper.get_files(file)    
     with tf.Graph().as_default() as g:
-        train_batch, train_label_batch = input_helper.get_batch(train,
-                                                          train_label,
-                                                          IMG_W,
-                                                          IMG_H,
-                                                          BATCH_SIZE, 
-                                                          CAPACITY)  
+        train_batch, train_label_batch = input_helper.get_dev_batch(train,
+                                                                    train_label,
+                                                                    IMG_W,
+                                                                    IMG_H,
+                                                                    BATCH_SIZE, 
+                                                                    CAPACITY)  
         logit, _ = alexnet.alexnet_v2(train_batch, N_CLASSES)
         
         top_k_op = tf.nn.in_top_k(logit, train_label_batch, 1)
