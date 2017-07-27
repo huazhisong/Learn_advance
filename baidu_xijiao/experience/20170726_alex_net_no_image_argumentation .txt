@@ -1,0 +1,14 @@
+1、代码初步完成实现，可以正常使用不同的model进行试验
+2、暂时使用AlexNet进行运行
+运行参数：
+N_CLASSES = 100
+IMG_W = 224  
+IMG_H = 224
+BATCH_SIZE = 16
+CAPACITY = 200
+MAX_STEP = 10000 
+learning_rate = 0.0001 
+
+3、没有使用图片增强，只是单纯的使用Alex网络进行训练
+4、实验结果
+错误率：0.9897
