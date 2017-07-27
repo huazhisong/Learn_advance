@@ -20,7 +20,7 @@ import csv
 import os
 # import pdb
 
-import alexnet
+import inception_v4
 import input_helper
 
 #%%
@@ -29,8 +29,8 @@ BATCH_SIZE = 1
 N_CLASSES = 100
 MAX_STEP = 10593
 # MAX_STEP = 10
-IMG_W = 224  # resize the image, if the input image is too large, training will be very slow.
-IMG_H = 224
+IMG_W = 299  # resize the image, if the input image is too large, training will be very slow.
+IMG_H = 299
 CAPACITY = 200
 
 # %%
@@ -105,7 +105,7 @@ def test_image():
     train, image_ids = get_files()    
     with tf.Graph().as_default():
         train_batch, imageid_batch = get_batch(train, image_ids, IMG_W, IMG_H, BATCH_SIZE, CAPACITY)  
-        logit, _ = alexnet.alexnet_v2(train_batch, N_CLASSES)
+        logit, _ = inception_v4.alexnet_v2(train_batch, N_CLASSES)
         
         prediction = tf.argmax(logit, 1)
         
