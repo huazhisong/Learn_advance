@@ -105,7 +105,7 @@ def test_image():
     train, image_ids = get_files()    
     with tf.Graph().as_default():
         train_batch, imageid_batch = get_batch(train, image_ids, IMG_W, IMG_H, BATCH_SIZE, CAPACITY)  
-        logit, _ = inception_v4.alexnet_v2(train_batch, N_CLASSES)
+        logit, _ = inception_v4.inception_v4(train_batch, N_CLASSES)
         
         prediction = tf.argmax(logit, 1)
         
