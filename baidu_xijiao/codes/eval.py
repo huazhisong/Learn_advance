@@ -12,7 +12,7 @@ import tensorflow as tf
 import numpy as np
 
 import input_helper
-import alexnet
+import inception_v4
 
 #%%
 
@@ -37,7 +37,7 @@ def evaluate_image():
                                                                     IMG_H,
                                                                     BATCH_SIZE, 
                                                                     CAPACITY)  
-        logit, _ = alexnet.alexnet_v2(train_batch, N_CLASSES)
+        logit, _ = inception_v4.alexnet_v2(train_batch, N_CLASSES)
         
         top_k_op = tf.nn.in_top_k(logit, train_label_batch, 1)
         

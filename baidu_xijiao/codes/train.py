@@ -10,7 +10,7 @@ import os
 import numpy as np
 import tensorflow as tf
 import input_helper
-import alexnet
+import inception_v4
 
 #%%
 
@@ -38,10 +38,10 @@ def run_training():
                                                           IMG_H,
                                                           BATCH_SIZE, 
                                                           CAPACITY)  
-    train_logits, _ = alexnet.alexnet_v2(train_batch, N_CLASSES)
-    train_loss = alexnet.losses(train_logits, train_label_batch)        
-    train_op = alexnet.trainning(train_loss, learning_rate)
-    train__acc = alexnet.evaluation(train_logits, train_label_batch)
+    train_logits, _ = inception_v4.alexnet_v2(train_batch, N_CLASSES)
+    train_loss = inception_v4.losses(train_logits, train_label_batch)        
+    train_op = inception_v4.trainning(train_loss, learning_rate)
+    train__acc = inception_v4.evaluation(train_logits, train_label_batch)
        
     summary_op = tf.summary.merge_all()
     sess = tf.Session()
