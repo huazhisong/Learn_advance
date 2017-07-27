@@ -113,10 +113,28 @@ def get_batch(image, label, image_W, image_H, batch_size, capacity):
     ######################################
 
     image = tf.image.resize_image_with_crop_or_pad(image, image_W, image_H)
-
-    # if you want to test the generated batches of images, you might want to comment the following line.
+    
+    
+    # Image processing for training the network. Note the many random
+    # distortions applied to the image.
+    
+    reshaped_image = tf.cast(image, tf.float32)
+    # Randomly crop a [height, width] section of the image.
+    distorted_image = tf.random_crop(reshaped_image, [image_W, image_H, 3])
+    
+    # Because these operations are not commutative, consider randomizing
+    # the order their operation.
+    # NOTE: since per_image_standardization zeros the mean and makes
+    # the stddev unit, this likely has no effect see tensorflow#1458.
+    distorted_image = tf.image.random_brightness(distorted_image,
+                                                 max_delta=63)
+    distorted_image = tf.image.random_contrast(distorted_image,
+                                               lower=0.2, upper=1.8)
+  
+     # Subtract off the mean and divide by the variance of the pixels.
     image = tf.image.per_image_standardization(image)
-
+    image.set_shape([image_W, image_H, 3])
+    
     image_batch, label_batch = tf.train.batch([image, label],
                                               batch_size=batch_size,
                                               num_threads=64,
