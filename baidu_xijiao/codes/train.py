@@ -17,10 +17,10 @@ import inception_v4
 N_CLASSES = 100
 IMG_W = 299  # resize the image, if the input image is too large, training will be very slow.
 IMG_H = 299
-BATCH_SIZE = 16
+BATCH_SIZE = 32
 CAPACITY = 200
-MAX_STEP = 10000 # with current parameters, it is suggested to use MAX_STEP>10k
-learning_rate = 0.0001 # with current parameters, it is suggested to use learning rate<0.0001
+MAX_STEP = 1e6 # with current parameters, it is suggested to use MAX_STEP>10k
+learning_rate = 1e-3 # with current parameters, it is suggested to use learning rate<0.0001
 
 
 #%%
