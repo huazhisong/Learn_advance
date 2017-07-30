@@ -16,7 +16,6 @@ Created on Thu Jul 20 19:42:36 2017
 # when training, comment the following codes.
 import tensorflow as tf
 import numpy as np
-import csv
 import os
 # import pdb
 
@@ -142,7 +141,6 @@ def test_image():
                 coord.request_stop()    
             coord.join(threads)
     # pdb.set_trace()
-    all_predictions.astype(np.int64)
     all_predictions = input_helper.get_real_label(all_predictions)
     predictions_human_readable = np.column_stack((all_predictions, np.array(image_ids)))
     out_path = os.path.join(".", "prediction.csv")
