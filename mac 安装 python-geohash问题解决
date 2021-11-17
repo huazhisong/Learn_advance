@@ -1,0 +1,4 @@
+参考
+https://github.com/huazhisong/Learn_advance.git
+解决方案
+sudo CFLAGS=-stdlib=libc++ pip3 install python-geohash
