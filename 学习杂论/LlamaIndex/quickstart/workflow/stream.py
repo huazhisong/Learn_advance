@@ -33,9 +33,7 @@ class MyWorkflow(Workflow):
     @step
     async def step_two(self, ctx: Context, ev: FirstEvent) -> SecondEvent:
         llm = OpenAI(model="gpt-4o-mini")
-        generator = await llm.astream_complete(
-            "Please give me the first 3 paragraphs of Moby Dick, a book in the public domain."
-        )
+        generator = await llm.astream_complete("Please give me a joke.")
         async for response in generator:
             # Allow the workflow to stream this piece of response
             ctx.write_event_to_stream(ProgressEvent(msg=response.delta))
