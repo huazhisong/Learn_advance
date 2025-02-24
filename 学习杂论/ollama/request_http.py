@@ -1,7 +1,7 @@
 import requests
 
 url = "http://localhost:11434/api/chat"
-model = "deepseek-r1:7b"
+model = "deepseek-r1:1.5b"
 headers = {"Content-Type": "application/json"}
 data = {
     "model": model,  # 模型选择
